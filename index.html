@@ -1,4 +1,4 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
@@ -19,6 +19,7 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      position: relative;
     }
     h1, h2 {
       text-align: center;
@@ -68,6 +69,7 @@
       border-radius: 12px;
       margin-bottom: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      cursor: pointer;
     }
     .fish-card h3 {
       font-size: 1.2rem;
@@ -136,12 +138,39 @@
         padding: 20px 20px;
       }
     }
+
+    /* কার্ট আইকনের জন্য */
+    #cartIcon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: url('https://cdn-icons-png.flaticon.com/512/263/263142.png') no-repeat center/contain;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    #logoText {
+  font-size: 3.5rem;
+  font-weight: 500;
+  font-family: 'Segoe UI Black', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b, #f9d423, #ff416c);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color:bLack;
+  user-select: none;
+  filter: drop-shadow(0 3px 6px rgba(255, 75, 43, 0.7));
+  letter-spacing: 0.12em;
+}
   </style>
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body>
 
 <header>
-  <h1>🐟 BuyNest - মাছ ডেলিভারি</h1>
+<h1 id="logoText">BuyNest</h1>
   <p>সতেজ ও সুস্বাদু মাছ সরাসরি আপনার ঘরে পৌঁছে দিবে।</p>
 </header>
 
@@ -171,41 +200,72 @@
   </form>
 </section>
 
+<!-- কার্ট আইকন -->
+<div id="cartIcon"></div>
+
 <script>
-const fishData = [
+  const fishData = [
   {
     name: "ইলিশ",
     price: 900,
-    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/images.jpg"
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/ilish-fish.png"
   },
   {
-    name: "গলদা চিংড়ি",
+    name: "গলদা চিংড়ি",
     price: 850,
     img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/golda-chingri.png"
   },
   {
-    name: "রুই",
-    price: 400,
-    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/ruhi.png"
+    name: "বাগদা চিংড়ি",
+    price: 800,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/bagda-chingri.png"
   },
   {
-    name: "কাতলা",
-    price: 450,
-    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/katla.png"
+    name: "বোয়াল",
+    price: 350,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/boal-fish.png"
   },
   {
-    name: "তেলাপিয়া",
+    name: "আইর",
     price: 300,
-    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/tilapia.png"
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/air-fish.png"
   },
   {
-    name: "পাঙ্গাস",
-    price: 280,
-    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/pangas.png"
+    name: "পাবদা",
+    price: 400,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/pabda-fish.png"
+  },
+  {
+    name: "গুলশা",
+    price: 300,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gulsha-fish.png"
+  },
+  {
+    name: "টেংরা",
+    price: 350,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/tengra-fish.png"
+  },
+  {
+    name: "মলা",
+    price: 200,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/mola-fish.png"
+  },
+  {
+    name: "গুতুম",
+    price: 250,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gutum-fish.png"
+  },
+  {
+    name: "শিং",
+    price: 400,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/shing-fish.png"
+  },
+  {
+    name: "মাগুর",
+    price: 450,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/magur-fish.png"
   }
 ];
-
-
 
   const fishGrid = document.querySelector(".fish-grid");
   const fishSelect = document.getElementById("fishSelect");
@@ -226,6 +286,48 @@ const fishData = [
     fishSelect.appendChild(option);
   });
 
+  // GSAP Animation for flying image to cart
+  const cartIcon = document.getElementById("cartIcon");
+
+  fishGrid.querySelectorAll(".fish-card img").forEach(img => {
+    img.addEventListener("click", e => {
+      const imgRect = img.getBoundingClientRect();
+      const cartRect = cartIcon.getBoundingClientRect();
+
+      const clone = img.cloneNode(true);
+      clone.style.position = "fixed";
+      clone.style.left = imgRect.left + "px";
+      clone.style.top = imgRect.top + "px";
+      clone.style.width = imgRect.width + "px";
+      clone.style.height = imgRect.height + "px";
+      clone.style.borderRadius = "12px";
+      clone.style.zIndex = "9999";
+      clone.style.pointerEvents = "none";
+
+      document.body.appendChild(clone);
+
+      gsap.to(clone, {
+        duration: 1,
+        left: cartRect.left + cartRect.width / 2 - imgRect.width / 4,
+        top: cartRect.top + cartRect.height / 2 - imgRect.height / 4,
+        width: imgRect.width / 2,
+        height: imgRect.height / 2,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.to(clone, {
+            duration: 0.3,
+            scale: 0,
+            opacity: 0,
+            onComplete: () => {
+              clone.remove();
+            }
+          });
+        }
+      });
+    });
+  });
+
+  // Form submission code (unchanged)
   const form = document.getElementById("orderForm");
   form.addEventListener("submit", e => {
     e.preventDefault();
@@ -259,6 +361,436 @@ const fishData = [
 
     form.reset();
   });
+  // এনিমেশন শুরু করার জন্য
+const logoText = document.getElementById('logoText');
+const text = logoText.textContent;
+logoText.textContent = '';
+
+// লেটার বাই লেটার স্প্যান করে আলাদা করা
+for(let char of text){
+  const span = document.createElement('span');
+  span.textContent = char;
+  span.style.opacity = 0;
+  span.style.display = 'inline-block';
+  logoText.appendChild(span);
+}
+
+// GSAP দিয়ে এনিমেশন
+gsap.timeline({repeat: 0})
+  .to("#logoText span", {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.5,
+    ease: "back.out(1.7)",
+    stagger: 0.1,
+    from: {opacity:0, y:20, scale:0.8}
+  })
+  .to("#logoText", {
+    backgroundPosition: "200% 0",
+    duration: 3,
+    ease: "power1.inOut",
+    repeat: -1,
+    yoyo: true
+  }, "-=1.5");
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BuyNest - মাছ ডেলিভারি</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #ff5f6d, #ffc371);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    }
+    header {
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 5px;
+    }
+    header p {
+      font-size: 1.25rem;
+      opacity: 0.9;
+    }
+    .fish-grid {
+      max-width: 900px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+    .fish-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .fish-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+      background: rgba(255,255,255,0.3);
+    }
+    .fish-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .fish-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+    .fish-card p {
+      font-weight: bold;
+      color: #ffdb4d;
+      font-size: 1rem;
+    }
+    form {
+      max-width: 400px;
+      width: 100%;
+      background: rgba(255,255,255,0.15);
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      backdrop-filter: blur(12px);
+      color: white;
+    }
+    form h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    form textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    form button {
+      width: 100%;
+      background: #00e676;
+      border: none;
+      padding: 14px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border-radius: 10px;
+      color: #222;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    form button:hover {
+      background: #00c853;
+      color: white;
+    }
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      form {
+        padding: 20px 20px;
+      }
+    }
+
+    /* কার্ট আইকনের জন্য */
+    #cartIcon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: url('https://cdn-icons-png.flaticon.com/512/263/263142.png') no-repeat center/contain;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    #logoText {
+  font-size: 3.5rem;
+  font-weight: 500;
+  font-family: 'Segoe UI Black', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b, #f9d423, #ff416c);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color:bLack;
+  user-select: none;
+  filter: drop-shadow(0 3px 6px rgba(255, 75, 43, 0.7));
+  letter-spacing: 0.12em;
+}
+  </style>
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+<header>
+<h1 id="logoText">BuyNest</h1>
+  <p>সতেজ ও সুস্বাদু মাছ সরাসরি আপনার ঘরে পৌঁছে দিবে।</p>
+</header>
+
+<section class="fish-grid" aria-label="মাছের তালিকা"></section>
+
+<section>
+  <form id="orderForm" aria-label="অর্ডার ফর্ম">
+    <h2>আপনার অর্ডার দিন</h2>
+    <label for="name">নাম</label>
+    <input type="text" id="name" name="name" placeholder="আপনার নাম লিখুন" required />
+
+    <label for="phone">মোবাইল নম্বর</label>
+    <input type="tel" id="phone" name="phone" placeholder="০১৭XXXXXXXX" pattern="[0-9]{11}" required />
+
+    <label for="address">ঠিকানা</label>
+    <textarea id="address" name="address" placeholder="ডেলিভারি ঠিকানা লিখুন" required></textarea>
+
+    <label for="fishSelect">মাছ নির্বাচন করুন</label>
+    <select id="fishSelect" name="fish" required>
+      <option value="" disabled selected>-- মাছ নির্বাচন করুন --</option>
+    </select>
+
+    <label for="quantity">পরিমাণ (কেজি)</label>
+    <input type="number" id="quantity" name="quantity" min="1" placeholder="যত কেজি চান লিখুন" required />
+
+    <button type="submit">অর্ডার করুন</button>
+  </form>
+</section>
+
+<!-- কার্ট আইকন -->
+<div id="cartIcon"></div>
+
+<script>
+  const fishData = [
+  {
+    name: "ইলিশ",
+    price: 900,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/ilish-fish.png"
+  },
+  {
+    name: "গলদা চিংড়ি",
+    price: 850,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/golda-chingri.png"
+  },
+  {
+    name: "বাগদা চিংড়ি",
+    price: 800,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/bagda-chingri.png"
+  },
+  {
+    name: "বোয়াল",
+    price: 350,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/boal-fish.png"
+  },
+  {
+    name: "আইর",
+    price: 300,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/air-fish.png"
+  },
+  {
+    name: "পাবদা",
+    price: 400,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/pabda-fish.png"
+  },
+  {
+    name: "গুলশা",
+    price: 300,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gulsha-fish.png"
+  },
+  {
+    name: "টেংরা",
+    price: 350,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/tengra-fish.png"
+  },
+  {
+    name: "মলা",
+    price: 200,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/mola-fish.png"
+  },
+  {
+    name: "গুতুম",
+    price: 250,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gutum-fish.png"
+  },
+  {
+    name: "শিং",
+    price: 400,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/shing-fish.png"
+  },
+  {
+    name: "মাগুর",
+    price: 450,
+    img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/magur-fish.png"
+  }
+];
+
+  const fishGrid = document.querySelector(".fish-grid");
+  const fishSelect = document.getElementById("fishSelect");
+
+  fishData.forEach(fish => {
+    const card = document.createElement("div");
+    card.className = "fish-card";
+    card.innerHTML = `
+      <img src="${fish.img}" alt="${fish.name}">
+      <h3>${fish.name}</h3>
+      <p>দাম: ${fish.price} টাকা</p>
+    `;
+    fishGrid.appendChild(card);
+
+    const option = document.createElement("option");
+    option.value = fish.name;
+    option.textContent = fish.name;
+    fishSelect.appendChild(option);
+  });
+
+  // GSAP Animation for flying image to cart
+  const cartIcon = document.getElementById("cartIcon");
+
+  fishGrid.querySelectorAll(".fish-card img").forEach(img => {
+    img.addEventListener("click", e => {
+      const imgRect = img.getBoundingClientRect();
+      const cartRect = cartIcon.getBoundingClientRect();
+
+      const clone = img.cloneNode(true);
+      clone.style.position = "fixed";
+      clone.style.left = imgRect.left + "px";
+      clone.style.top = imgRect.top + "px";
+      clone.style.width = imgRect.width + "px";
+      clone.style.height = imgRect.height + "px";
+      clone.style.borderRadius = "12px";
+      clone.style.zIndex = "9999";
+      clone.style.pointerEvents = "none";
+
+      document.body.appendChild(clone);
+
+      gsap.to(clone, {
+        duration: 1,
+        left: cartRect.left + cartRect.width / 2 - imgRect.width / 4,
+        top: cartRect.top + cartRect.height / 2 - imgRect.height / 4,
+        width: imgRect.width / 2,
+        height: imgRect.height / 2,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.to(clone, {
+            duration: 0.3,
+            scale: 0,
+            opacity: 0,
+            onComplete: () => {
+              clone.remove();
+            }
+          });
+        }
+      });
+    });
+  });
+
+  // Form submission code (unchanged)
+  const form = document.getElementById("orderForm");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const name = form.name.value.trim();
+    const phone = form.phone.value.trim();
+    const address = form.address.value.trim();
+    const fish = form.fish.value;
+    const quantity = form.quantity.value.trim();
+
+    if (!name || !phone || !address || !fish || !quantity) {
+      alert("দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন।");
+      return;
+    }
+
+    const phonePattern = /^[0-9]{11}$/;
+    if (!phonePattern.test(phone)) {
+      alert("দয়া করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন।");
+      return;
+    }
+
+    const message = `অর্ডার তথ্যঃ
+নাম: ${name}
+মোবাইল: ${phone}
+ঠিকানা: ${address}
+মাছ: ${fish}
+পরিমাণ: ${quantity} কেজি`;
+
+    const whatsappURL = `https://wa.me/8801723376453?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, "_blank");
+
+    form.reset();
+  });
+  // এনিমেশন শুরু করার জন্য
+const logoText = document.getElementById('logoText');
+const text = logoText.textContent;
+logoText.textContent = '';
+
+// লেটার বাই লেটার স্প্যান করে আলাদা করা
+for(let char of text){
+  const span = document.createElement('span');
+  span.textContent = char;
+  span.style.opacity = 0;
+  span.style.display = 'inline-block';
+  logoText.appendChild(span);
+}
+
+// GSAP দিয়ে এনিমেশন
+gsap.timeline({repeat: 0})
+  .to("#logoText span", {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.5,
+    ease: "back.out(1.7)",
+    stagger: 0.1,
+    from: {opacity:0, y:20, scale:0.8}
+  })
+  .to("#logoText", {
+    backgroundPosition: "200% 0",
+    duration: 3,
+    ease: "power1.inOut",
+    repeat: -1,
+    yoyo: true
+  }, "-=1.5");
 </script>
 
 </body>
