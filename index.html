@@ -236,28 +236,22 @@
 
 <script>
   const fishData = [
-    {name: "ইলিশ", price: 900, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/ilish-fish.png"},
-    {name: "গলদা চিংড়ি", price: 850, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/golda-chingri.png"},
-    {name: "বাগদা চিংড়ি", price: 800, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/bagda-chingri.png"},
-    {name: "বোয়াল", price: 350, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/boal-fish.png"},
-    {name: "আইর", price: 300, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/air-fish.png"},
-    {name: "পাবদা", price: 400, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/pabda-fish.png"},
-    {name: "গুলশা", price: 300, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gulsha-fish.png"},
-    {name: "টেংরা", price: 350, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/tengra-fish.png"},
-    {name: "মলা", price: 200, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/mola-fish.png"},
-    {name: "গুতুম", price: 250, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gutum-fish.png"},
-    {name: "শিং", price: 400, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/shing-fish.png"},
-    {name: "মাগুর", price: 450, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/magur-fish.png"}
-  ];
+  {name: "ইলিশ", price: 900, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/ilish-fish.png"},
+  {name: "গলদা চিংড়ি", price: 850, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/golda-chingri.png"},
+  {name: "বাগদা চিংড়ি", price: 800, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/bagda-chingri.png"},
+  {name: "বোয়াল", price: 350, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/boal-fish.png"},
+  {name: "আইর", price: 300, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/air-fish.png"},
+  {name: "পাবদা", price: 400, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/pabda-fish.png"},
+  {name: "গুলশা", price: 300, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gulsha-fish.png"},
+  {name: "টেংরা", price: 350, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/tengra-fish.png"},
+  {name: "মলা", price: 200, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/mola-fish.png"},
+  {name: "গুতুম", price: 250, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/gutum-fish.png"},
+  {name: "শিং", price: 400, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/shing-fish.png"},
+  {name: "মাগুর", price: 450, img: "https://raw.githubusercontent.com/shantoatiq/buynest-fish-delivery/main/images/magur-fish.png"},
 
-  const fishGrid = document.querySelector(".fish-grid");
-  const cartIcon = document.getElementById("cartIcon");
-  const cartList = document.getElementById("cartList");
-  const orderBtn = document.getElementById("orderBtn");
-  const customerForm = document.getElementById("customerForm");
-
-  let cartItems = [];
-
+  // নতুন মাছের এন্ট্রি
+  {name: "নতুন মাছ", price: 500, img: "images_1754447971481.jpg"}
+];
   // মাছের কার্ড তৈরি ও ইভেন্ট
   fishData.forEach(fish => {
     const card = document.createElement("div");
