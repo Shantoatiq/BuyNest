@@ -160,6 +160,39 @@
       z-index: 1000;
     }
 
+    /* নতুন ফর্ম স্টাইল */
+    #customerForm {
+      max-width: 400px;
+      width: 100%;
+      margin-bottom: 30px;
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      color: #fff;
+      user-select: none;
+    }
+    #customerForm h2 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    #customerForm label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    #customerForm input,
+    #customerForm textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
     @media (max-width: 480px) {
       header h1 {
         font-size: 2rem;
@@ -183,6 +216,19 @@
   <strong>আপনার কার্ট</strong>
   <ul id="cartList"></ul>
 </div>
+
+<!-- কাস্টমার ডিটেইলস ফরম -->
+<form id="customerForm" aria-label="গ্রাহকের তথ্য ফরম" autocomplete="off">
+  <h2>তোমার তথ্য</h2>
+  <label for="customerName">নাম</label>
+  <input type="text" id="customerName" name="customerName" placeholder="তোমার নাম" required>
+
+  <label for="customerPhone">মোবাইল নম্বর</label>
+  <input type="tel" id="customerPhone" name="customerPhone" placeholder="০১XXXXXXXXX" pattern="[0-9]{10,15}" required>
+
+  <label for="customerAddress">ঠিকানা</label>
+  <textarea id="customerAddress" name="customerAddress" rows="3" placeholder="তোমার ঠিকানা লিখুন" required></textarea>
+</form>
 
 <button id="orderBtn" aria-label="অর্ডার করুন">অর্ডার করুন</button>
 
@@ -208,6 +254,7 @@
   const cartIcon = document.getElementById("cartIcon");
   const cartList = document.getElementById("cartList");
   const orderBtn = document.getElementById("orderBtn");
+  const customerForm = document.getElementById("customerForm");
 
   let cartItems = [];
 
@@ -296,17 +343,38 @@
 
   // অর্ডার বাটন ক্লিক করলে ওয়াটসঅ্যাপ লিংক
   orderBtn.addEventListener("click", () => {
+    // ফর্মের ভ্যালিডেশন
+    if (!customerForm.reportValidity()) {
+      return; // ভুল থাকলে সাবমিট হবে না
+    }
+
     if(cartItems.length === 0){
       alert("অনুগ্রহ করে মাছ যোগ করুন।");
       return;
     }
 
-    let message = "আমার মাছের অর্ডার:\n";
+    // ফর্ম ডাটা নেওয়া
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
+
+    if(name === "" || phone === "" || address === ""){
+      alert("অনুগ্রহ করে সব তথ্য পূরণ করুন।");
+      return;
+    }
+
+    // মেসেজ তৈরি
+    let message = `আমার মাছের অর্ডার:\n\n`;
+    message += `নাম: ${name}\n`;
+    message += `মোবাইল: ${phone}\n`;
+    message += `ঠিকানা: ${address}\n\n`;
+    message += `মাছের তালিকা:\n`;
+
     cartItems.forEach(item => {
       message += `${item.fish} - ${item.quantity} কেজি\n`;
     });
 
-    // ফোন নম্বর পরিবর্তন করে নিতে পারো তোমার
+    // ওয়াটসঅ্যাপ লিংক (নম্বর পরিবর্তন করতে পারো)
     const whatsappURL = `https://wa.me/8801723376453?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, "_blank");
   });
